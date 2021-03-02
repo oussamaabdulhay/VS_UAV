@@ -38,18 +38,18 @@ void pixelCallback(const geometry_msgs::PointStamped& msg){
     ROS_WARN("Failure %s\n", ex.what()); //Print exception which was caught
   }
   R.setRotation(tf2::Quaternion(cam_to_cam_fixed.transform.rotation.x, cam_to_cam_fixed.transform.rotation.y, cam_to_cam_fixed.transform.rotation.z, cam_to_cam_fixed.transform.rotation.w));
-  tf2::doTransform(X_px_c, X_px_c_rotated, cam_to_cam_fixed);
+  tf2::doTransform(X_px_c, X_px_c_rotated, cam_to_cam_fixed); //Cam to cam_fixed
   
   tf2::Vector3 X, X_t;
   X.setX((_depth * X_px_c_rotated.x)/X_px_c_rotated.y);
   X.setY(_depth);
   X.setZ((_depth * X_px_c_rotated.z)/X_px_c_rotated.y);
-  X_t = X + R*T;
+  X_t = X + R*T; //cam fixed to body fixed
   X_m.header.frame_id = "body_fixed";
   X_m.header.stamp = msg_time;
   X_m.point.x = X_t.getX();
-  X_m.point.x = X_t.getY();
-  X_m.point.x = X_t.getZ();
+  X_m.point.y = X_t.getY();
+  X_m.point.z = X_t.getZ();
 
   pub_object_pos.publish(X_m);
 
@@ -78,7 +78,7 @@ void pitchCallback(const geometry_msgs::Point& msg){
   transformStamped.header.frame_id = "body_fixed";
   transformStamped.child_frame_id = "body";
   tf2::Quaternion q;
-  q.setRPY(roll, pitch, yaw+yawrt*(ros::Duration(msg_time - yaw_t).toSec()));;;
+  q.setRPY(roll, pitch, yaw+yawrt*(ros::Duration(msg_time - yaw_t).toSec()));
   transformStamped.transform.rotation.x = q.x();
   transformStamped.transform.rotation.y = q.y();
   transformStamped.transform.rotation.z = q.z();
