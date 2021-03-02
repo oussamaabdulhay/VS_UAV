@@ -18,13 +18,11 @@ tf2::Matrix3x3 R;
 float _depth = 3.8, _f = 616.5, _cx = 320, _cy = 240;
 float roll, pitch, yaw, yawrt;
 ros::Time yaw_t;
-//std::string cam_frame_id = "camera";
 
 void cam_info_callback(const sensor_msgs::CameraInfo& cam_info){
     _f = cam_info.K[0];
     _cx = cam_info.K[2];
     _cy = cam_info.K[5];
-//    cam_frame_id = cam_info.header.frame_id;
 }
 
 void pixelCallback(const geometry_msgs::PointStamped& msg){
@@ -86,23 +84,6 @@ void pitchCallback(const geometry_msgs::Point& msg){
   transformStamped.transform.rotation.z = q.z();
   transformStamped.transform.rotation.w = q.w();
   br.sendTransform(transformStamped);
-
-// //  tf2::Transform body_tf_now(q);
-//   // try{
-//   //    body_to_body_fixed = tf_Buffer.lookupTransform("body_fixed", "body", X_m.header.stamp, ros::Duration(0.1));
-//   //    X_m_body = tf_Buffer.transform(X_m, "body", ros::Duration(0.1));
-//   // }
-//   // catch (tf2::TransformException &ex) {
-//   //   ROS_WARN("Failure %s\n", ex.what()); //Print exception which was caught
-//   // }
-// //  tf2::Quaternion rot(body_to_body_fixed.transform.rotation.x, body_to_body_fixed.transform.rotation.y, body_to_body_fixed.transform.rotation.z, body_to_body_fixed.transform.rotation.w);
-//   tf2::Matrix3x3 body_rot_old = cam_to_cam_fixed
-
-//   tf2::Transform body_tf_old(rot);
-//   tf2::Vector3 X_m_body_now = body_tf_now.inverse()*body_tf_old*tf2::Vector3(X_m_body.point.x, X_m_body.point.y, X_m_body.point.z);
-
-//   target_pos.header.frame_id = "body_fixed";
-
 }
 
 int main(int argc, char** argv){
@@ -118,10 +99,6 @@ int main(int argc, char** argv){
   ros::Subscriber sub_pitch = nh.subscribe("/providers/pitch", 10, &pitchCallback);
   ros::Subscriber sub_yaw = nh.subscribe("/providers/yaw", 10, &yawCallback);
   ros::Subscriber sub_yaw_rt = nh.subscribe("/providers/yaw_rate", 10, &yawrtCallback);
-  // ros::Subscriber sub_x = nh.subscribe<geometry_msgs::Point>("/providers/x", 10, &xCallback);
-  // ros::Subscriber sub_y = nh.subscribe<geometry_msgs::Point>("/providers/y", 10, &yCallback);
-  // ros::Subscriber sub_z = nh.subscribe<geometry_msgs::Point>("/providers/z", 10, &zCallback);
-  
   cam_to_body = tf_Buffer.lookupTransform("body", "camera", ros::Time(0), ros::Duration(5.0));
 
   T = tf2::Vector3(cam_to_body.transform.translation.x, cam_to_body.transform.translation.y, cam_to_body.transform.translation.z);

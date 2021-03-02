@@ -1,0 +1,9 @@
+<launch>
+
+<node pkg="vs_uav" type="ball_detector_node" name="ball_detector_node" output="screen"/>
+
+<node pkg="vs_uav" type="target_position_node" name="target_position_node" output="screen"/>
+
+<node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="0.13 -0.03 -0.12 0 0 0 body camera" />
+
+</launch>
