@@ -8,4 +8,5 @@
 <!-- 
 <node pkg="rviz" type="rviz" name="rviz" args="-d $(find vs_uav)/rviz/ball.rviz"/> -->
 
+
 </launch>
